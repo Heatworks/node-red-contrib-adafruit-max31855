@@ -1,0 +1,19 @@
+{
+  "name": "heatworks/node-red-contrib-adafruit-max31855",
+  "version": "0.0.1",
+  "description": "Node-RED node for communicating with an Adafruit MAX31855 module.",
+  "main": "thermocouple/thermocouple.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Heatworks/node-red-contrib-adafruit-max31855.git"
+  },
+  "author": "Weston Catron",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Heatworks/node-red-contrib-adafruit-max31855/issues"
+  },
+  "homepage": "https://github.com/Heatworks/node-red-contrib-adafruit-max31855#readme"
+}
