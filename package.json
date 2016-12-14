@@ -18,5 +18,10 @@
   "homepage": "https://github.com/Heatworks/node-red-contrib-adafruit-max31855#readme",
   "dependencies": {
     "python-shell": "^0.4.0"
+  },
+  "node-red"     : {
+    "nodes": {
+      "thermocouple": "thermocouple/thermocouple.js"
+    }
   }
 }
