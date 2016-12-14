@@ -11,19 +11,21 @@ module.exports = function(RED) {
             node.send(msg);
         });
         
-        pyshell.run('spi_read.py', function (err) {
+        pyshell.run('/home/pi/node-red-contrib-adafruit-max31855/thermocouple/spi_read.py', function (err) {
             if (err) throw err;
             console.log('finished');
         });
         pyshell.on('message', function (message) {
             // received a message sent from the Python script (a simple "print" statement)
             console.log(message);
+            node.send(message);
         });
 
         // end the input stream and allow the process to exit
         pyshell.end(function (err) {
             if (err) throw err;
             console.log('finished');
+            node.send('finished');
         });
     }
     RED.nodes.registerType("adafruit-max31855",LowerCaseNode);
