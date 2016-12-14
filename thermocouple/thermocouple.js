@@ -11,7 +11,7 @@ module.exports = function(RED) {
             node.send(msg);
         });
 
-        var scriptPath = '/home/pi/node-red-contrib-adafruit-max31855/thermocouple/spi_read.py'
+        var scriptPath = '//home/pi/node-red-contrib-adafruit-max31855/thermocouple/spi_read.py'
         var pyshell = new PythonShell(scriptPath);
 
         pyshell.on('message', function (message) {
