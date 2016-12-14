@@ -10,7 +10,6 @@ module.exports = function(RED) {
 
         pyshell.on('message', function (message) {
             // received a message sent from the Python script (a simple "print" statement)
-            console.log(message);
             node.send({
                 payload: message
             });
@@ -19,7 +18,6 @@ module.exports = function(RED) {
         // end the input stream and allow the process to exit
         pyshell.end(function (err) {
             if (err) throw err;
-            console.log('finished');
             node.send('finished');
         });
     }
