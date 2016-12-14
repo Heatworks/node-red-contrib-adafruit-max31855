@@ -1,23 +1,19 @@
 var PythonShell = require('python-shell');
 
 module.exports = function(RED) {
-    function LowerCaseNode(config) {
+    function AdafruitMax31855Node(config) {
         RED.nodes.createNode(this,config);
         var node = this;
 
-        
-        this.on('input', function(msg) {
-            msg.payload = msg.payload.toLowerCase();
-            node.send(msg);
-        });
-
-        var scriptPath = '//home/pi/node-red-contrib-adafruit-max31855/thermocouple/spi_read.py'
-        var pyshell = new PythonShell(scriptPath);
+        var scriptPath = './spi_read.py'
+        var pyshell = new PythonShell(scriptPath, { scriptPath: __dirname });
 
         pyshell.on('message', function (message) {
             // received a message sent from the Python script (a simple "print" statement)
             console.log(message);
-            node.send(message);
+            node.send({
+                payload: message
+            });
         });
 
         // end the input stream and allow the process to exit
@@ -27,5 +23,5 @@ module.exports = function(RED) {
             node.send('finished');
         });
     }
-    RED.nodes.registerType("adafruit-max31855",LowerCaseNode);
+    RED.nodes.registerType("adafruit-max31855", AdafruitMax31855Node);
 }
