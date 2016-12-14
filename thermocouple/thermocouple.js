@@ -1,4 +1,4 @@
-var pyshell = require('python-shell');
+var PythonShell = require('python-shell');
 
 module.exports = function(RED) {
     function LowerCaseNode(config) {
@@ -10,11 +10,10 @@ module.exports = function(RED) {
             msg.payload = msg.payload.toLowerCase();
             node.send(msg);
         });
-        
-        pyshell.run('/home/pi/node-red-contrib-adafruit-max31855/thermocouple/spi_read.py', function (err) {
-            if (err) throw err;
-            console.log('finished');
-        });
+
+        var scriptPath = '/home/pi/node-red-contrib-adafruit-max31855/thermocouple/spi_read.py'
+        var pyshell = new PythonShell(scriptPath);
+
         pyshell.on('message', function (message) {
             // received a message sent from the Python script (a simple "print" statement)
             console.log(message);
