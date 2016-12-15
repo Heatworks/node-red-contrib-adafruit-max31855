@@ -63,7 +63,7 @@ sensor = MAX31855.MAX31855(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
 print('Press Ctrl-C to quit.')
 while True:
     temp = sensor.readTempC()
-    #internal = sensor.readInternalC()
+    internal = sensor.readInternalC()
     #internal = random.uniform(70.0, 120.0)
     
     print('{0:0.3F},0,{1:0.3F}'.format(time(), temp ))
