@@ -63,10 +63,10 @@ sensor = MAX31855.MAX31855(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
 print('Press Ctrl-C to quit.')
 while True:
     temp = sensor.readTempC()
-    internal = sensor.readInternalC()
-    #internal = random.uniform(70.0, 120.0)
+    #internal = sensor.readInternalC()
+    internal = random.uniform(70.0, 120.0)
     
-    print('{0:0.3F},0,{1:0.3F}'.format(time(), temp ))
+    #print('{0:0.3F},0,{1:0.3F}'.format(time(), temp ))
     print ('{0:0.3F},internal,{1:0.3F}'.format(time(), internal ))
     #print('Thermocouple Temperature: {0:0.3F}*C / {1:0.3F}*F'.format(temp, c_to_f(temp)))
     #print('    Internal Temperature: {0:0.3F}*C / {1:0.3F}*F'.format(internal, c_to_f(internal)))
