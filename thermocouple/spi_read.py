@@ -94,7 +94,7 @@ while True:
             setMuxing(i)
             temp = sensor.readTempC()
             internal = sensor.readInternalC()
-            print('{0:0.3F},{1},{1:0.3F}'.format(time(),i, temp ))
+            print('{0:0.3F},{1},{2:0.3F}'.format(time(),i, temp ))
             print ('{0:0.3F},internal,{1:0.3F}'.format(time(), internal ))
     else:
         temp = sensor.readTempC()
