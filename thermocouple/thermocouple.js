@@ -6,7 +6,13 @@ module.exports = function(RED) {
         var node = this;
 
         var scriptPath = './spi_read.py'
-        var pyshell = new PythonShell(scriptPath, { scriptPath: __dirname });
+        
+        var args = []
+        if (this.muxing) {
+            args = [0,1,3,4,5,6]
+        }
+
+        var pyshell = new PythonShell(scriptPath, { scriptPath: __dirname, args: args });
 
         pyshell.on('message', function (message) {
             node.send({

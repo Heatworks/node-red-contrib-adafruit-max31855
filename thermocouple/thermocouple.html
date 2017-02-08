@@ -3,7 +3,8 @@
         category: 'input',
         color: '#a6bbcf',
         defaults: {
-            name: { value: "" }
+            name: { value: "" },
+            muxing: { value:0,required:true,validate:RED.validators.number() },
         },
         inputs:0,
         outputs:1,
@@ -18,6 +19,10 @@
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-muxing"><i class="icon-code-fork"></i> Muxing</label>
+        <input type="text" id="node-config-input-muxing">
     </div>
 </script>
 
