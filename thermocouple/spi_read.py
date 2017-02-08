@@ -1,4 +1,3 @@
-# Author: Tony DiCola
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +23,10 @@
 
 from time import time, sleep
 import random
+import sys
 
 import Adafruit_GPIO.SPI as SPI
+import Adafruit_GPIO.GPIO as GPIO
 import Adafruit_MAX31855.MAX31855 as MAX31855
 
 
@@ -43,9 +44,22 @@ def c_to_f(c):
 #DO  = 18
 #sensor = MAX31855.MAX31855(CLK, CS, DO)
 
-# Raspberry Pi hardware SPI configuration.
-SPI_PORT   = 0
+# GPI 3,4,5,6
+# MUX - A0, A1, A2, A3
+
+SPI_PORT = 0
 SPI_DEVICE = 1
+MUXING = False
+
+if(len(sys.argv) > 2):
+    SPI_PORT = int(sys.argv[1])
+    SPI_DEVICE = int(sys.argv[2])
+    
+if(len(sys.argv) > 6):
+    MUXING = True
+    MUXING_SELECTORS = [int(sys.argv[3]), int(sys.argv[4]), int(sys.argv[5]), int(sys.argv[6])]
+
+# Raspberry Pi hardware SPI configuration.
 sensor = MAX31855.MAX31855(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
 
 # BeagleBone Black software SPI configuration.
@@ -59,20 +73,40 @@ sensor = MAX31855.MAX31855(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
 #SPI_DEVICE = 0
 #sensor = MAX31855.MAX31855(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
 
+if (MUXING):
+    gpio = GPIO.get_platform_gpio()
+    for selector in MUXING_SELECTORS:
+        gpio.setup(selector, GPIO.OUT)
+
+def setMuxing(chipSelect):
+    chipSelectArray = [int(x) for x in bin(chipSelect)[2:]]
+    while (len(chipSelectArray) < 4):
+        chipSelectArray.insert(0, 0)
+    for index, value in enumerate(chipSelectArray):
+        gpio.output(MUXING_SELECTORS[index], (value == 1))
+
 # Loop printing measurements every second.
 print('Press Ctrl-C to quit.')
 while True:
-    temp = sensor.readTempC()
-    internal = sensor.readInternalC()
-    #internal = random.uniform(70.0, 120.0)
+
+    if MUXING:
+        for i in range(0,16):
+            setMuxing(i)
+            temp = sensor.readTempC()
+            internal = sensor.readInternalC()
+            print('{0:0.3F},{1},{1:0.3F}'.format(time(),i, temp ))
+            print ('{0:0.3F},internal,{1:0.3F}'.format(time(), internal ))
+    else:
+        temp = sensor.readTempC()
+        internal = sensor.readInternalC()
+        print('{0:0.3F},0,{1:0.3F}'.format(time(), temp ))
+        print ('{0:0.3F},internal,{1:0.3F}'.format(time(), internal ))
     
-    print('{0:0.3F},0,{1:0.3F}'.format(time(), temp ))
-    print ('{0:0.3F},internal,{1:0.3F}'.format(time(), internal ))
     #print('Thermocouple Temperature: {0:0.3F}*C / {1:0.3F}*F'.format(temp, c_to_f(temp)))
     #print('    Internal Temperature: {0:0.3F}*C / {1:0.3F}*F'.format(internal, c_to_f(internal)))
     
-    #v = sensor._read32()
-    #if v & 0x7:
-    #    print "{0:0.3F},internal.error,{1:0.1F}".format(time(), float( v & 0x7))
+    v = sensor._read32()
+    if v & 0x7:
+        print "{0:0.3F},error,{1:0.1F}".format(time(), float( v & 0x7))
     
-    sleep(0.1)
+    sleep(1.0)
