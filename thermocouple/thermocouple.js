@@ -8,8 +8,8 @@ module.exports = function(RED) {
         var scriptPath = './spi_read.py'
         
         var args = []
-        console.log("Adafruit MAX 31855: Checking for muxing...")
-        if (this.muxing) {
+        console.log("Adafruit MAX 31855: Checking for muxing... "+this.muxing)
+        if (this.muxing == 1) {
             console.log("Adafruit MAX 31855: Enabled muxing.")
             args = [0,1,17,6,5,4,7,18,1]
         }
