@@ -3,6 +3,7 @@ var PythonShell = require('python-shell');
 module.exports = function(RED) {
     function AdafruitMax31855Node(config) {
         RED.nodes.createNode(this,config);
+        this.muxing = config.muxing;
         var node = this;
 
         var scriptPath = './spi_read.py'
