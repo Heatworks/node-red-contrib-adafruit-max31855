@@ -9,7 +9,7 @@ module.exports = function(RED) {
         
         var args = []
         if (this.muxing) {
-            args = [0,1,3,4,5,6]
+            args = [0,1,17,6,5,4,7,18,1]
         }
 
         var pyshell = new PythonShell(scriptPath, { scriptPath: __dirname, args: args });
