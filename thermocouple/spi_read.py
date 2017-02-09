@@ -80,8 +80,8 @@ if (MUXING):
     gpio = GPIO.get_platform_gpio()
     for selector in MUXING_SELECTORS:
         gpio.setup(selector, GPIO.OUT)
-    gpio.setup(MUXING_ENABLER, GPIO_OUT)
-    gpio.setup(MUXING_LATCH, GPIO_OUT)
+    gpio.setup(MUXING_ENABLER, GPIO.OUT)
+    gpio.setup(MUXING_LATCH, GPIO.OUT)
 
 def disableMuxing():
     gpio.output(MUXING_ENABLER, True)
