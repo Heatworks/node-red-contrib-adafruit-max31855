@@ -55,9 +55,12 @@ if(len(sys.argv) > 2):
     SPI_PORT = int(sys.argv[1])
     SPI_DEVICE = int(sys.argv[2])
     
-if(len(sys.argv) > 6):
+if(len(sys.argv) > 9):
     MUXING = True
     MUXING_SELECTORS = [int(sys.argv[3]), int(sys.argv[4]), int(sys.argv[5]), int(sys.argv[6])]
+    MUXING_ENABLER = int(sys.argv[7])
+    MUXING_LATCH = int(sys.argv[8])
+    MUXING_COUNT = int(sys.argv[9])
 
 # Raspberry Pi hardware SPI configuration.
 sensor = MAX31855.MAX31855(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
@@ -77,25 +80,46 @@ if (MUXING):
     gpio = GPIO.get_platform_gpio()
     for selector in MUXING_SELECTORS:
         gpio.setup(selector, GPIO.OUT)
+    gpio.setup(MUXING_ENABLER, GPIO_OUT)
+    gpio.setup(MUXING_LATCH, GPIO_OUT)
+
+def disableMuxing():
+    gpio.output(MUXING_ENABLER, True)
+
+def enableMuxing():
+    gpio.output(MUXING_ENABLER, False)
+
+def enableSelecting():
+    gpio.output(MUXING_LATCH, True)
+
+def disableSelecting():
+    gpio.output(MUXING_LATCH, False)
 
 def setMuxing(chipSelect):
+    enableSelecting()
     chipSelectArray = [int(x) for x in bin(chipSelect)[2:]]
     while (len(chipSelectArray) < 4):
         chipSelectArray.insert(0, 0)
     for index, value in enumerate(chipSelectArray):
         gpio.output(MUXING_SELECTORS[index], (value == 1))
+    disableSelecting()
 
 # Loop printing measurements every second.
 print('Press Ctrl-C to quit.')
 while True:
 
     if MUXING:
+        enableMuxing()
+        maxInternal = 0
         for i in range(0,16):
+            enableMuxer()
             setMuxing(i)
             temp = sensor.readTempC()
             internal = sensor.readInternalC()
             print('{0:0.3F},{1},{2:0.3F}'.format(time(),i, temp ))
-            print ('{0:0.3F},internal,{1:0.3F}'.format(time(), internal ))
+            maxInternal = max(maxInternal, internal)
+        print ('{0:0.3F},maxInternal,{1:0.3F}'.format(time(), maxInternal ))
+        disableMuxing()
     else:
         temp = sensor.readTempC()
         internal = sensor.readInternalC()
