@@ -112,7 +112,6 @@ while True:
         enableMuxing()
         maxInternal = 0
         for i in range(0,16):
-            enableMuxer()
             setMuxing(i)
             temp = sensor.readTempC()
             internal = sensor.readInternalC()
