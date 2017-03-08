@@ -128,8 +128,9 @@ while True:
     #print('Thermocouple Temperature: {0:0.3F}*C / {1:0.3F}*F'.format(temp, c_to_f(temp)))
     #print('    Internal Temperature: {0:0.3F}*C / {1:0.3F}*F'.format(internal, c_to_f(internal)))
     
-    v = sensor._read32()
-    if v & 0x7:
-        print "{0:0.3F},error,{1:0.1F}".format(time(), float( v & 0x7))
+    # TODO: Check for errors. Removed because 0x7 is too broad.
+    #v = sensor._read32()
+    #if v & 0x7:
+    #    print "{0:0.3F},error,{1:0.1F}".format(time(), float( v & 0x7))
     
     sleep(1.0)
