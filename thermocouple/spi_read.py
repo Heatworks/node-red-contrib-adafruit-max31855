@@ -29,23 +29,9 @@ import Adafruit_GPIO.SPI as SPI
 import Adafruit_GPIO.GPIO as GPIO
 import Adafruit_MAX31855.MAX31855 as MAX31855
 
-
 # Define a function to convert celsius to fahrenheit.
 def c_to_f(c):
         return c * 9.0 / 5.0 + 32.0
-
-
-# Uncomment one of the blocks of code below to configure your Pi or BBB to use
-# software or hardware SPI.
-
-# Raspberry Pi software SPI configuration.
-#CLK = 25
-#CS  = 24
-#DO  = 18
-#sensor = MAX31855.MAX31855(CLK, CS, DO)
-
-# GPI 3,4,5,6
-# MUX - A0, A1, A2, A3
 
 SPI_PORT = 0
 SPI_DEVICE = 1
@@ -62,19 +48,12 @@ if(len(sys.argv) > 9):
     MUXING_LATCH = int(sys.argv[8])
     MUXING_COUNT = int(sys.argv[9])
 
+SAMPLING_RATE = 1.000
+if(len(sys.argv) > 10):
+    SAMPLING_RATE = int(sys.argv[10]) / 1000
+
 # Raspberry Pi hardware SPI configuration.
 sensor = MAX31855.MAX31855(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
-
-# BeagleBone Black software SPI configuration.
-#CLK = 'P9_12'
-#CS  = 'P9_15'
-#DO  = 'P9_23'
-#sensor = MAX31855.MAX31855(CLK, CS, DO)
-
-# BeagleBone Black hardware SPI configuration.
-#SPI_PORT   = 1
-#SPI_DEVICE = 0
-#sensor = MAX31855.MAX31855(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
 
 if (MUXING):
     gpio = GPIO.get_platform_gpio()
@@ -104,33 +83,53 @@ def setMuxing(chipSelect):
         gpio.output(MUXING_SELECTORS[index], (value == 1))
     disableSelecting()
 
+channels = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+maxInternal = 0
+last_report = 0
+samples = 0
+
+def sampledData(channel, temp):
+    channels[channel] = ((channels[channel] * samples) + temp) / (samples + 1)
+
+def completedSampling():
+    samples = samples + 1
+    report()
+
+def report():
+    if (time() - last_report > SAMPLING_RATE):
+        last_report = time()
+        for i in range(0,16):
+            print('{0:0.3F},{1},{2:0.3F}'.format(time(),i, channels[i] ))
+
+        print ('{0:0.3F},maxInternal,{1:0.3F}'.format(time(), maxInternal ))
+        print ('{0:0.3F},samples,{1}'.format(time(), samples ))
+        maxInternal = 0
+    channels = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    samples = 0
+
 # Loop printing measurements every second.
 print('Press Ctrl-C to quit.')
 while True:
-
     if MUXING:
         enableMuxing()
         maxInternal = 0
         for i in range(0,16):
             setMuxing(i)
-            temp = sensor.readTempC()
-            internal = sensor.readInternalC()
-            print('{0:0.3F},{1},{2:0.3F}'.format(time(),i, temp ))
-            maxInternal = max(maxInternal, internal)
-        print ('{0:0.3F},maxInternal,{1:0.3F}'.format(time(), maxInternal ))
+            channelTemp = sensor.readTempC()
+            sampledData(i, channelTemp)
+            maxInternal = max(maxInternal, sensor.readInternalC())
         disableMuxing()
+        completedSampling()
+            
     else:
         temp = sensor.readTempC()
         internal = sensor.readInternalC()
         print('{0:0.3F},0,{1:0.3F}'.format(time(), temp ))
         print ('{0:0.3F},internal,{1:0.3F}'.format(time(), internal ))
     
-    #print('Thermocouple Temperature: {0:0.3F}*C / {1:0.3F}*F'.format(temp, c_to_f(temp)))
-    #print('    Internal Temperature: {0:0.3F}*C / {1:0.3F}*F'.format(internal, c_to_f(internal)))
-    
     # TODO: Check for errors. Removed because 0x7 is too broad.
     #v = sensor._read32()
     #if v & 0x7:
     #    print "{0:0.3F},error,{1:0.1F}".format(time(), float( v & 0x7))
     
-    sleep(1.0)
+    sleep(0.1)
