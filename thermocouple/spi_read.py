@@ -49,8 +49,10 @@ if(len(sys.argv) > 9):
     MUXING_COUNT = int(sys.argv[9])
 
 SAMPLING_RATE = 1.000
-if(len(sys.argv) > 10):
-    SAMPLING_RATE = int(sys.argv[10]) / 1000
+REPORTING_RATE = 1.000
+if(len(sys.argv) > 11):
+    SAMPLING_RATE = float(sys.argv[10]) / 1000
+    REPORTING_RATE = float(sys.argv[11]) / 1000
 
 # Raspberry Pi hardware SPI configuration.
 sensor = MAX31855.MAX31855(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
@@ -94,7 +96,7 @@ def sampledData(channel, temp):
 
 def report():
     global samples, channels, maxInternal, last_report
-    if (time() - last_report > SAMPLING_RATE):
+    if (time() - last_report > REPORTING_RATE):
         last_report = time()
         for i in range(0,16):
             print('{0:0.3F},{1},{2:0.3F}'.format(time(),i, channels[i] ))
@@ -109,8 +111,6 @@ def completedSampling():
     global samples
     samples = samples + 1
     report()
-
-
 
 # Loop printing measurements every second.
 print('Press Ctrl-C to quit.')
@@ -137,4 +137,4 @@ while True:
     #if v & 0x7:
     #    print "{0:0.3F},error,{1:0.1F}".format(time(), float( v & 0x7))
     
-    sleep(0.1)
+    sleep(SAMPLING_RATE)
