@@ -5,6 +5,8 @@
         defaults: {
             name: { value: "" },
             muxing: { value:0,required:true,validate:RED.validators.number() },
+            sampling: { value:10,required:true,validate:RED.validators.number() },
+            reporting: { value:1000,required:true,validate:RED.validators.number() }
         },
         inputs:0,
         outputs:1,
@@ -22,7 +24,15 @@
     </div>
     <div class="form-row">
         <label for="node-input-muxing"><i class="icon-code-fork"></i> Muxing</label>
-        <input type="text" id="node-input-muxing">
+        <input type="text" id="node-input-muxing" placeholder="1 for True, 0 for False">
+    </div>
+    <div class="form-row">
+        <label for="node-input-sampling"><i class="icon-clock"></i> Sampling</label>
+        <input type="text" id="node-input-sampling" placeholder="Sampling rate in milliseconds.">
+    </div>
+    <div class="form-row">
+        <label for="node-input-reporting"><i class="icon-clipboard"></i> Reporting</label>
+        <input type="text" id="node-input-reporting" placeholder="Reporting rate in milliseconds.">
     </div>
 </script>
 
