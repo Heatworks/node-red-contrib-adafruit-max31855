@@ -1,6 +1,6 @@
 {
   "name": "@heatworks/node-red-contrib-adafruit-max31855",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Node-RED node for communicating with an Adafruit MAX31855 module.",
   "main": "thermocouple/thermocouple.js",
   "scripts": {

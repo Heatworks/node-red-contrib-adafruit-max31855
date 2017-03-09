@@ -89,13 +89,11 @@ last_report = 0
 samples = 0
 
 def sampledData(channel, temp):
+    global channels, samples
     channels[channel] = ((channels[channel] * samples) + temp) / (samples + 1)
 
-def completedSampling():
-    samples = samples + 1
-    report()
-
 def report():
+    global samples, channels, maxInternal
     if (time() - last_report > SAMPLING_RATE):
         last_report = time()
         for i in range(0,16):
@@ -106,6 +104,13 @@ def report():
         maxInternal = 0
     channels = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     samples = 0
+
+def completedSampling():
+    global samples
+    samples = samples + 1
+    report()
+
+
 
 # Loop printing measurements every second.
 print('Press Ctrl-C to quit.')
