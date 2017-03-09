@@ -93,7 +93,7 @@ def sampledData(channel, temp):
     channels[channel] = ((channels[channel] * samples) + temp) / (samples + 1)
 
 def report():
-    global samples, channels, maxInternal
+    global samples, channels, maxInternal, last_report
     if (time() - last_report > SAMPLING_RATE):
         last_report = time()
         for i in range(0,16):
