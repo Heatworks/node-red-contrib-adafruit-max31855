@@ -102,8 +102,8 @@ def report():
         print ('{0:0.3F},maxInternal,{1:0.3F}'.format(time(), maxInternal ))
         print ('{0:0.3F},samples,{1}'.format(time(), samples ))
         maxInternal = 0
-    channels = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-    samples = 0
+        channels = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        samples = 0
 
 def completedSampling():
     global samples
