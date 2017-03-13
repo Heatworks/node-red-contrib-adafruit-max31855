@@ -24,6 +24,7 @@
 from time import time, sleep
 import random
 import sys
+import math
 
 import Adafruit_GPIO.SPI as SPI
 import Adafruit_GPIO.GPIO as GPIO
@@ -92,6 +93,10 @@ samples = 0
 
 def sampledData(channel, temp):
     global channels, samples
+    if math.isnan(temp):
+        print ('{0:0.3F},{1}-bad,{2}'.format(time(),channel, temp ))
+        temp = channels[channel]
+    
     channels[channel] = ((channels[channel] * samples) + temp) / (samples + 1)
 
 def report():
