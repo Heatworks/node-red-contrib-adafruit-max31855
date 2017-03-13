@@ -86,7 +86,7 @@ def setMuxing(chipSelect):
         gpio.output(MUXING_SELECTORS[index], (value == 1))
     disableSelecting()
 
-channels = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+channels = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
 maxInternal = 0
 last_report = 0
 samples = 0
@@ -94,22 +94,21 @@ samples = 0
 def sampledData(channel, temp):
     global channels, samples
     if math.isnan(temp):
-        print ('{0:0.3F},{1}-bad,{2}'.format(time(),channel, temp ))
-        temp = channels[channel]
+        #print ('{0:0.3F},{1}-bad,{2}'.format(time(),channel, temp ))
+    else:
+        channels[channel].append(temp)
     
-    channels[channel] = ((channels[channel] * samples) + temp) / (samples + 1)
-
 def report():
     global samples, channels, maxInternal, last_report
     if (time() - last_report > REPORTING_RATE):
         last_report = time()
         for i in range(0,16):
-            print('{0:0.3F},{1},{2:0.3F}'.format(time(),i, channels[i] ))
+            print('{0:0.3F},{1},{2:0.3F}'.format(time(),i, sum(channels[i])/len(channels[i]) ))
 
         print ('{0:0.3F},maxInternal,{1:0.3F}'.format(time(), maxInternal ))
         print ('{0:0.3F},samples,{1}'.format(time(), samples ))
         maxInternal = 0
-        channels = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        channels = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
         samples = 0
 
 def completedSampling():
