@@ -49,6 +49,10 @@ if(len(sys.argv) > 9):
     MUXING_LATCH = int(sys.argv[8])
     MUXING_COUNT = int(sys.argv[9])
 
+    if (MUXING_COUNT > 16):
+        print("Max number of muxings is 16.")
+        exit()
+
 SAMPLING_RATE = 1.000
 REPORTING_RATE = 1.000
 if(len(sys.argv) > 11):
@@ -99,7 +103,7 @@ def report():
     global channels, maxInternal, last_report
     if (time() - last_report > REPORTING_RATE):
         last_report = time()
-        for i in range(0,16):
+        for i in range(0,MUXING_COUNT):
             if len(channels[i]) > 0:
                 print('{0:0.3F},{1},{2:0.3F}'.format(time(),i, sum(channels[i])/len(channels[i]) ))
 
@@ -113,7 +117,7 @@ while True:
     if MUXING:
         enableMuxing()
         maxInternal = 0
-        for i in range(0,16):
+        for i in range(0,MUXING_COUNT):
             setMuxing(i)
             channelTemp = sensor.readTempC()
             sampledData(i, channelTemp)
