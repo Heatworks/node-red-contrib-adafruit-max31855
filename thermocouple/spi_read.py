@@ -59,8 +59,16 @@ if(len(sys.argv) > 11):
     SAMPLING_RATE = float(sys.argv[10]) / 1000
     REPORTING_RATE = float(sys.argv[11]) / 1000
 
+if(len(sys.argv) > 14):
+    SPI_CLK = int(sys.argv[12])
+    SPI_DO = int(sys.argv[13])
+    SPI_CS = int(sys.argv[14])
+    sensor = MAX31855.MAX31855(clk=SPI_CLK, do=SPI_DO, cs=SPI_CS)
+else:
+    sensor = MAX31855.MAX31855(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
+
 # Raspberry Pi hardware SPI configuration.
-sensor = MAX31855.MAX31855(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
+
 
 if (MUXING):
     gpio = GPIO.get_platform_gpio()

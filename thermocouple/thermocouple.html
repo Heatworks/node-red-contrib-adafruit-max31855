@@ -7,7 +7,9 @@
             muxing: { value:0,required:true,validate:RED.validators.number() },
             channels: { value:12,required:false,validate:RED.validators.number() },
             sampling: { value:10,required:true,validate:RED.validators.number() },
-            reporting: { value:1000,required:true,validate:RED.validators.number() }
+            reporting: { value:1000,required:true,validate:RED.validators.number() },
+            spi_port: { value:0,required:true,validate:RED.validators.number() },
+            spi_device: { value:1,required:true,validate:RED.validators.number() },
         },
         inputs:0,
         outputs:1,
@@ -38,6 +40,28 @@
     <div class="form-row">
         <label for="node-input-reporting"><i class="icon-clipboard"></i> Reporting</label>
         <input type="text" id="node-input-reporting" placeholder="Reporting rate in milliseconds.">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-spi_port"><i class="icon-serial"></i> SPI Port</label>
+        <input type="text" id="node-input-spi_port" placeholder="">
+    </div>
+    <div class="form-row">
+        <label for="node-input-spi_device"><i class="icon-serial"></i> SPI Device</label>
+        <input type="text" id="node-input-spi_device" placeholder="">
+    </div>
+    <h3>SPI Bit Bang GPIOs (optional)</h3>
+    <div class="form-row">
+        <label for="node-input-spi_clk"><i class="icon-serial"></i> Clock</label>
+        <input type="text" id="node-input-spi_clk" placeholder="GPIO # for Clock. Leave blank if using default SPI.">
+    </div>
+    <div class="form-row">
+        <label for="node-input-spi_do"><i class="icon-serial"></i> Data Out</label>
+        <input type="text" id="node-input-spi_do" placeholder="GPIO # for Data Out. Leave blank if using default SPI.">
+    </div>
+    <div class="form-row">
+        <label for="node-input-spi_cs"><i class="icon-serial"></i> Chip Select</label>
+        <input type="text" id="node-input-spi_cs" placeholder="GPIO # for Chip Select. Leave blank if using default SPI.">
     </div>
 </script>
 
